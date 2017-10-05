@@ -1,5 +1,5 @@
-TARGET=lightd
-SOURCES=lightd.c
+TARGET=accelerationd
+SOURCES=accelerationd.c
 
 # You probably don't need to change below
 
