@@ -1,5 +1,5 @@
-TARGET=accelerationd
-SOURCES=accelerationd.c
+TARGET=file_loc
+SOURCES=file_loc.c
 
 # You probably don't need to change below
 
