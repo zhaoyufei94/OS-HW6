@@ -798,5 +798,7 @@ const struct inode_operations ext4_file_inode_operations = {
 	.set_acl	= ext4_set_acl,
 #endif
 	.fiemap		= ext4_fiemap,
+	.set_gps_location	= ext4_set_gps,
+	.get_gps_location	= ext4_get_gps,
 };
 

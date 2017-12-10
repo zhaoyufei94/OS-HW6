@@ -4009,6 +4009,7 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 {
 	struct ext4_iloc iloc;
 	struct ext4_inode *raw_inode;
+	//void *raw_inode;
 	struct ext4_inode_info *ei;
 	struct inode *inode;
 	journal_t *journal = EXT4_SB(sb)->s_journal;
@@ -4029,7 +4030,21 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 	ret = __ext4_get_inode_loc(inode, &iloc, 0);
 	if (ret < 0)
 		goto bad_inode;
+	/*
+	if (ext4_test_gps(sb) == 1) {
+		raw_inode = ext4_raw_gps_inode(&iloc);
+		//ei->i_gps.latitude	= le64_to_cpu(raw_inode->i_latitude);
+		//ei->i_gps.longitude	= le64_to_cpu(raw_inode->i_longitude);
+		//ei->i_gps.accuracy	= le32_to_cpu(raw_inode->i_accuracy);
+		//ei->i_gps.age		= le32_to_cpu(raw_inode->i_coord_age);
+	} else {
+		raw_inode = ext4_raw_inode(&iloc);
+	}
+	*/
+
 	raw_inode = ext4_raw_inode(&iloc);
+	if (ext4_test_gps(sb) == 1)
+		raw_inode = (struct ext4_gps_inode *) (raw_inode);
 
 	if (EXT4_INODE_SIZE(inode->i_sb) > EXT4_GOOD_OLD_INODE_SIZE) {
 		ei->i_extra_isize = le16_to_cpu(raw_inode->i_extra_isize);

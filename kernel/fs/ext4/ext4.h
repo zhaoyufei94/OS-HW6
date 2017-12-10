@@ -32,6 +32,7 @@
 #include <linux/ratelimit.h>
 #include <crypto/hash.h>
 #include <linux/falloc.h>
+#include <linux/gps.h>
 #ifdef __KERNEL__
 #include <linux/compat.h>
 #endif
@@ -647,11 +648,10 @@ enum {
 #define EXT4_MAX_BLOCK_FILE_PHYS	0xFFFFFFFF
 
 
-#ifdef GPS_AWARE
 /*
- * Structure of an inode on the disk
+ * Structure of an inode on the gps aware disk
  */
-struct ext4_inode {
+struct ext4_gps_inode {
 	__le16	i_mode;		/* File mode */
 	__le16	i_uid;		/* Low 16 bits of Owner Uid */
 	__le32	i_size_lo;	/* Size in bytes */
@@ -715,7 +715,6 @@ struct ext4_inode {
 	__le32	i_coord_age;
 };
 
-#else /*GPS_AWARE*/
 
 /*
  * Structure of an inode on the disk
@@ -779,7 +778,6 @@ struct ext4_inode {
 	__le32  i_crtime_extra; /* extra FileCreationtime (nsec << 2 | epoch) */
 	__le32  i_version_hi;	/* high 32 bits for 64-bit version */
 };
-#endif /*GPS_AWARE*/
 
 
 struct move_extent {
@@ -903,6 +901,8 @@ struct ext4_inode_info {
 	__le32	i_data[15];	/* unconverted */
 	__u32	i_dtime;
 	ext4_fsblk_t	i_file_acl;
+
+	struct inode_gps i_gps;
 
 	/*
 	 * i_block_group is the number of the block group which contains
@@ -1077,11 +1077,14 @@ struct ext4_inode_info {
 #define EXT4_MOUNT_DIOREAD_NOLOCK	0x400000 /* Enable support for dio read nolocking */
 #define EXT4_MOUNT_JOURNAL_CHECKSUM	0x800000 /* Journal checksums */
 #define EXT4_MOUNT_JOURNAL_ASYNC_COMMIT	0x1000000 /* Journal Async Commit */
+#define EXT4_MOUNT_GPS_AWARE_INODE	0x2000000 /* GPS aware*/
 #define EXT4_MOUNT_DELALLOC		0x8000000 /* Delalloc support */
 #define EXT4_MOUNT_DATA_ERR_ABORT	0x10000000 /* Abort on file data write */
 #define EXT4_MOUNT_BLOCK_VALIDITY	0x20000000 /* Block validity checking */
 #define EXT4_MOUNT_DISCARD		0x40000000 /* Issue DISCARD requests */
 #define EXT4_MOUNT_INIT_INODE_TABLE	0x80000000 /* Initialize uninitialized itables */
+
+
 
 /*
  * Mount flags set either automatically (could not be set by mount option)
@@ -1624,6 +1627,8 @@ static inline int ext4_encrypted_inode(struct inode *inode)
 #define EXT4_FEATURE_COMPAT_RESIZE_INODE	0x0010
 #define EXT4_FEATURE_COMPAT_DIR_INDEX		0x0020
 #define EXT4_FEATURE_COMPAT_SPARSE_SUPER2	0x0200
+/* GPS */
+#define EXT4_FEATURE_COMPAT_GPS_AWARE		0x0400
 
 #define EXT4_FEATURE_RO_COMPAT_SPARSE_SUPER	0x0001
 #define EXT4_FEATURE_RO_COMPAT_LARGE_FILE	0x0002
@@ -1927,6 +1932,11 @@ struct ext4_iloc
 static inline struct ext4_inode *ext4_raw_inode(struct ext4_iloc *iloc)
 {
 	return (struct ext4_inode *) (iloc->bh->b_data + iloc->offset);
+}
+
+static inline struct ext4_gps_inode *ext4_raw_gps_inode(struct ext4_iloc *iloc)
+{
+	return (struct ext4_gps_inode *) (iloc->bh->b_data + iloc->offset);
 }
 
 /*
@@ -2413,6 +2423,11 @@ extern long ext4_compat_ioctl(struct file *, unsigned int, unsigned long);
 /* migrate.c */
 extern int ext4_ext_migrate(struct inode *);
 extern int ext4_ind_migrate(struct inode *inode);
+
+/* GPS operations namei.c */
+extern int ext4_set_gps(struct inode *inode);
+extern int ext4_get_gps(struct inode *inode, struct gps_location *loc);
+extern int ext4_test_gps(struct super_block *sb);
 
 /* namei.c */
 extern int ext4_dirent_csum_verify(struct inode *inode,
