@@ -653,6 +653,8 @@ struct inode *__ext4_new_inode(handle_t *handle, struct inode *dir,
 	ext4_group_t i;
 	ext4_group_t flex_group;
 
+	//printk("I need to create a new ext4_inode_info!\n");
+
 	/* Cannot create files in a deleted directory */
 	if (!dir || !dir->i_nlink)
 		return ERR_PTR(-EPERM);
@@ -666,6 +668,14 @@ struct inode *__ext4_new_inode(handle_t *handle, struct inode *dir,
 	ei = EXT4_I(inode);
 	sbi = EXT4_SB(sb);
 
+	/* Set GPS info in inode */
+	if (inode->i_op->set_gps_location) {
+		printk("this inode has set_gps operation\n");
+		inode->i_op->set_gps_location(inode);
+	} else {
+		printk("this inode has no set_gps operation\n");
+		ext4_set_gps(inode);
+	}
 	/*
 	 * Initalize owners and quota early so that we don't have to account
 	 * for quota initialization worst case in standard inode creating

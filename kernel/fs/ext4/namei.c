@@ -3286,6 +3286,35 @@ end_rename:
 	return retval;
 }
 
+/* return 1 on success */
+int ext4_set_gps(struct inode *inode)
+{
+	struct ext4_inode_info *ei;
+	printk("***ext4_set_gps is called***\n");
+	if (!inode)
+		return -EINVAL;
+	ei = EXT4_I(inode);
+	return 1;
+}
+
+int ext4_get_gps(struct inode *inode, struct gps_location *loc)
+{
+	printk("***ext4_get_gps is called***\n");
+	return 0;
+}
+
+/* Return 1 on GPS aware*/
+int ext4_test_gps(struct super_block *sb)
+{
+	if (!sb)
+		return -EINVAL;
+	if (!test_opt(sb, GPS_AWARE_INODE))
+		return 0;
+	if (!EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_GPS_AWARE))
+		return 0;
+	return 1;
+}
+
 /*
  * directories can handle most operations...
  */
@@ -3306,6 +3335,8 @@ const struct inode_operations ext4_dir_inode_operations = {
 	.removexattr	= generic_removexattr,
 	.get_acl	= ext4_get_acl,
 	.fiemap         = ext4_fiemap,
+	.set_gps_location	= ext4_set_gps,
+	.get_gps_location	= ext4_get_gps,
 };
 
 const struct inode_operations ext4_special_inode_operations = {
@@ -3315,4 +3346,6 @@ const struct inode_operations ext4_special_inode_operations = {
 	.listxattr	= ext4_listxattr,
 	.removexattr	= generic_removexattr,
 	.get_acl	= ext4_get_acl,
+	.set_gps_location	= ext4_set_gps,
+	.get_gps_location	= ext4_get_gps,
 };

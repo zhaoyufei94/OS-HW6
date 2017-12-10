@@ -30,6 +30,8 @@
 #include <linux/blockgroup_lock.h>
 #include <linux/percpu_counter.h>
 #include <crypto/hash.h>
+#include <linux/falloc.h>
+#include <linux/gps.h>
 #ifdef __KERNEL__
 #include <linux/compat.h>
 #endif
@@ -635,6 +637,75 @@ enum {
 /* Max physical block we can address w/o extents */
 #define EXT4_MAX_BLOCK_FILE_PHYS	0xFFFFFFFF
 
+
+/*
+ * Structure of an inode on the gps aware disk
+ */
+struct ext4_gps_inode {
+	__le16	i_mode;		/* File mode */
+	__le16	i_uid;		/* Low 16 bits of Owner Uid */
+	__le32	i_size_lo;	/* Size in bytes */
+	__le32	i_atime;	/* Access time */
+	__le32	i_ctime;	/* Inode Change time */
+	__le32	i_mtime;	/* Modification time */
+	__le32	i_dtime;	/* Deletion Time */
+	__le16	i_gid;		/* Low 16 bits of Group Id */
+	__le16	i_links_count;	/* Links count */
+	__le32	i_blocks_lo;	/* Blocks count */
+	__le32	i_flags;	/* File flags */
+	union {
+		struct {
+			__le32  l_i_version;
+		} linux1;
+		struct {
+			__u32  h_i_translator;
+		} hurd1;
+		struct {
+			__u32  m_i_reserved1;
+		} masix1;
+	} osd1;				/* OS dependent 1 */
+	__le32	i_block[EXT4_N_BLOCKS];/* Pointers to blocks */
+	__le32	i_generation;	/* File version (for NFS) */
+	__le32	i_file_acl_lo;	/* File ACL */
+	__le32	i_size_high;
+	__le32	i_obso_faddr;	/* Obsoleted fragment address */
+	union {
+		struct {
+			__le16	l_i_blocks_high; /* were l_i_reserved1 */
+			__le16	l_i_file_acl_high;
+			__le16	l_i_uid_high;	/* these 2 fields */
+			__le16	l_i_gid_high;	/* were reserved2[0] */
+			__le16	l_i_checksum_lo;/* crc32c(uuid+inum+inode) LE */
+			__le16	l_i_reserved;
+		} linux2;
+		struct {
+			__le16	h_i_reserved1;	/* Obsoleted fragment number/size which are removed in ext4 */
+			__u16	h_i_mode_high;
+			__u16	h_i_uid_high;
+			__u16	h_i_gid_high;
+			__u32	h_i_author;
+		} hurd2;
+		struct {
+			__le16	h_i_reserved1;	/* Obsoleted fragment number/size which are removed in ext4 */
+			__le16	m_i_file_acl_high;
+			__u32	m_i_reserved2[2];
+		} masix2;
+	} osd2;				/* OS dependent 2 */
+	__le16	i_extra_isize;
+	__le16	i_checksum_hi;	/* crc32c(uuid+inum+inode) BE */
+	__le32  i_ctime_extra;  /* extra Change time      (nsec << 2 | epoch) */
+	__le32  i_mtime_extra;  /* extra Modification time(nsec << 2 | epoch) */
+	__le32  i_atime_extra;  /* extra Access time      (nsec << 2 | epoch) */
+	__le32  i_crtime;       /* File Creation time */
+	__le32  i_crtime_extra; /* extra FileCreationtime (nsec << 2 | epoch) */
+	__le32  i_version_hi;	/* high 32 bits for 64-bit version */
+	__le64	i_latitude;
+	__le64	i_longitude;
+	__le32	i_accuracy;
+	__le32	i_coord_age;
+};
+
+
 /*
  * Structure of an inode on the disk
  */
@@ -697,6 +768,7 @@ struct ext4_inode {
 	__le32  i_crtime_extra; /* extra FileCreationtime (nsec << 2 | epoch) */
 	__le32  i_version_hi;	/* high 32 bits for 64-bit version */
 };
+
 
 struct move_extent {
 	__u32 reserved;		/* should be zero */
@@ -819,6 +891,8 @@ struct ext4_inode_info {
 	__le32	i_data[15];	/* unconverted */
 	__u32	i_dtime;
 	ext4_fsblk_t	i_file_acl;
+
+	struct inode_gps i_gps;
 
 	/*
 	 * i_block_group is the number of the block group which contains
@@ -976,11 +1050,14 @@ struct ext4_inode_info {
 #define EXT4_MOUNT_DIOREAD_NOLOCK	0x400000 /* Enable support for dio read nolocking */
 #define EXT4_MOUNT_JOURNAL_CHECKSUM	0x800000 /* Journal checksums */
 #define EXT4_MOUNT_JOURNAL_ASYNC_COMMIT	0x1000000 /* Journal Async Commit */
+#define EXT4_MOUNT_GPS_AWARE_INODE	0x2000000 /* GPS aware*/
 #define EXT4_MOUNT_DELALLOC		0x8000000 /* Delalloc support */
 #define EXT4_MOUNT_DATA_ERR_ABORT	0x10000000 /* Abort on file data write */
 #define EXT4_MOUNT_BLOCK_VALIDITY	0x20000000 /* Block validity checking */
 #define EXT4_MOUNT_DISCARD		0x40000000 /* Issue DISCARD requests */
 #define EXT4_MOUNT_INIT_INODE_TABLE	0x80000000 /* Initialize uninitialized itables */
+
+
 
 /*
  * Mount flags set either automatically (could not be set by mount option)
@@ -1476,6 +1553,9 @@ static inline void ext4_clear_state_flags(struct ext4_inode_info *ei)
 #define EXT4_FEATURE_COMPAT_EXT_ATTR		0x0008
 #define EXT4_FEATURE_COMPAT_RESIZE_INODE	0x0010
 #define EXT4_FEATURE_COMPAT_DIR_INDEX		0x0020
+#define EXT4_FEATURE_COMPAT_SPARSE_SUPER2	0x0200
+/* GPS */
+#define EXT4_FEATURE_COMPAT_GPS_AWARE		0x0400
 
 #define EXT4_FEATURE_RO_COMPAT_SPARSE_SUPER	0x0001
 #define EXT4_FEATURE_RO_COMPAT_LARGE_FILE	0x0002
@@ -1766,6 +1846,11 @@ struct ext4_iloc
 static inline struct ext4_inode *ext4_raw_inode(struct ext4_iloc *iloc)
 {
 	return (struct ext4_inode *) (iloc->bh->b_data + iloc->offset);
+}
+
+static inline struct ext4_gps_inode *ext4_raw_gps_inode(struct ext4_iloc *iloc)
+{
+	return (struct ext4_gps_inode *) (iloc->bh->b_data + iloc->offset);
 }
 
 /*
@@ -2135,6 +2220,11 @@ extern long ext4_compat_ioctl(struct file *, unsigned int, unsigned long);
 /* migrate.c */
 extern int ext4_ext_migrate(struct inode *);
 extern int ext4_ind_migrate(struct inode *inode);
+
+/* GPS operations namei.c */
+extern int ext4_set_gps(struct inode *inode);
+extern int ext4_get_gps(struct inode *inode, struct gps_location *loc);
+extern int ext4_test_gps(struct super_block *sb);
 
 /* namei.c */
 extern int ext4_dirent_csum_verify(struct inode *inode,

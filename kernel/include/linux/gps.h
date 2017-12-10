@@ -10,8 +10,15 @@ struct gps_location {
 };
 
 struct kernel_gps {
-	struct gps_location loc;
-	struct timespec timestamp;
+	struct	gps_location loc;
+	struct	timespec timestamp;
+};
+
+struct inode_gps {
+	__u64	latitude;
+	__u64	longitude;
+	__u32	accuracy;
+	__u32	age;
 };
 
 #endif

@@ -651,5 +651,7 @@ const struct inode_operations ext4_file_inode_operations = {
 	.removexattr	= generic_removexattr,
 	.get_acl	= ext4_get_acl,
 	.fiemap		= ext4_fiemap,
+	.set_gps_location	= ext4_set_gps,
+	.get_gps_location	= ext4_get_gps,
 };
 
