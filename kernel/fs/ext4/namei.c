@@ -3806,8 +3806,8 @@ int ext4_test_gps(struct super_block *sb)
 {
 	if (!sb)
 		return -EINVAL;
-	if (!test_opt(sb, GPS_AWARE_INODE))
-		return 0;
+	//if (!test_opt(sb, GPS_AWARE_INODE))
+	//	return 0;
 	if (!EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_GPS_AWARE))
 		return 0;
 	return 1;
