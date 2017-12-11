@@ -48,6 +48,8 @@
 #define NAMEI_RA_BLOCKS  4
 #define NAMEI_RA_SIZE	     (NAMEI_RA_CHUNKS * NAMEI_RA_BLOCKS)
 
+extern struct kernel_gps kgps;
+
 static struct buffer_head *ext4_append(handle_t *handle,
 					struct inode *inode,
 					ext4_lblk_t *block)
@@ -3787,17 +3789,43 @@ static int ext4_rename2(struct inode *old_dir, struct dentry *old_dentry,
 /* return 1 on success */
 int ext4_set_gps(struct inode *inode)
 {
+	struct timespec cur;
 	struct ext4_inode_info *ei;
+
 	printk("***ext4_set_gps is called***\n");
 	if (!inode)
-		return -EINVAL;
+		return -EFAULT;
 	ei = EXT4_I(inode);
+
+	write_lock(&gps_lock);
+
+	ei->inode_gps.latitude = (cpu_to_le64)kgps.loc.latitude;
+	ei->inode_gps.longitude = (cpu_to_le64)kgps.loc.longitude;
+	ei->inode_gps.accuracy = (cpu_to_le32)kgps.loc.accuracy;
+	cur = current_kernel_time();
+	ei->inode_gps.age = (cpu_to_le32)(cur.tv_sec - kgps.timestamp.tv_sec);
+
+	write_unlock(&gps_lock);
+
 	return 1;
 }
 
 int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 {
+	struct ext4_inode_info *ei;
+
+	if (!inode || !loc)
+		return -EFAULT;
 	printk("***ext4_get_gps is called***\n");
+
+	ei = EXT4_I(inode);
+
+	read_lock(&gps_lock);
+	loc.latitude = (le64_to_cpu)ei->inode_gps.latitude;
+	loc.longitude = (le64_to_cpu)ei->inode_gps.longitude;
+	loc.accuracy = (le32_to_cpu)ei->inode_gps.accuracy;
+
+	read_unlock(&gps_lock);
 	return 0;
 }
 
@@ -3805,7 +3833,7 @@ int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 int ext4_test_gps(struct super_block *sb)
 {
 	if (!sb)
-		return -EINVAL;
+		return -EFAULT;
 	//if (!test_opt(sb, GPS_AWARE_INODE))
 	//	return 0;
 	if (!EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_GPS_AWARE))

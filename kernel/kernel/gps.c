@@ -2,9 +2,6 @@
 #include <linux/syscalls.h>
 #include <linux/time.h>
 
-/* GPS lock: need to grab this lock before access kgps */
-static DEFINE_RWLOCK(gps_lock);
-
 /* kernel structure to store latest gps info  */
 struct kernel_gps kgps = {
 	.loc = {
@@ -44,7 +41,7 @@ static int check_valid(struct gps_location *u_gps)
 	ulog = double_long(u_gps->longitude);
 	uacc = float_int(u_gps->accuracy);
 
-	if (ulat == 0 || ulog == 0 || uacc == 0)
+	if (ulat == 0 && ulog == 0 && uacc == 0)
 		return -1;
 
 	read_lock(&gps_lock);

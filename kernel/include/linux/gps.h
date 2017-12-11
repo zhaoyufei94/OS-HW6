@@ -3,6 +3,9 @@
 
 #include <linux/time.h>
 
+/* GPS lock: need to grab this lock before access kgps */
+static DEFINE_RWLOCK(gps_lock);
+
 struct gps_location {
 	double	latitude;
 	double	longitude;
