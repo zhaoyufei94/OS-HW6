@@ -847,6 +847,7 @@ struct ext4_inode_info {
 	ext4_fsblk_t	i_file_acl;
 
 	struct inode_gps i_gps;
+	rwlock_t info_lock;
 
 	/*
 	 * i_block_group is the number of the block group which contains

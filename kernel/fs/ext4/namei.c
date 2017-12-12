@@ -34,6 +34,9 @@
 #include <linux/quotaops.h>
 #include <linux/buffer_head.h>
 #include <linux/bio.h>
+#include <linux/gps.h>
+#include <linux/rwlock_types.h>
+#include <linux/types.h>
 #include "ext4.h"
 #include "ext4_jbd2.h"
 
@@ -48,8 +51,7 @@
 #define NAMEI_RA_BLOCKS  4
 #define NAMEI_RA_SIZE	     (NAMEI_RA_CHUNKS * NAMEI_RA_BLOCKS)
 
-extern struct kernel_gps kgps;
-
+extern struct kernel_gps kgps; 
 static struct buffer_head *ext4_append(handle_t *handle,
 					struct inode *inode,
 					ext4_lblk_t *block)
@@ -3796,16 +3798,20 @@ int ext4_set_gps(struct inode *inode)
 	if (!inode)
 		return -EFAULT;
 	ei = EXT4_I(inode);
+	if (!ei)
+		return -EFAULT;
 
-	write_lock(&gps_lock);
+	write_lock(&ei->info_lock);
 
-	ei->inode_gps.latitude = (cpu_to_le64)kgps.loc.latitude;
-	ei->inode_gps.longitude = (cpu_to_le64)kgps.loc.longitude;
-	ei->inode_gps.accuracy = (cpu_to_le32)kgps.loc.accuracy;
+
+	/* from double to __u64 */
+	ei->i_gps.latitude = *(unsigned long long *)&kgps.loc.latitude;
+	ei->i_gps.longitude = *(unsigned long long *)&kgps.loc.longitude;
+	ei->i_gps.accuracy = *(unsigned int *)&kgps.loc.accuracy;
 	cur = current_kernel_time();
-	ei->inode_gps.age = (cpu_to_le32)(cur.tv_sec - kgps.timestamp.tv_sec);
+	ei->i_gps.age = *(unsigned int *)(cur.tv_sec - kgps.timestamp.tv_sec);
 
-	write_unlock(&gps_lock);
+	write_unlock(&ei->info_lock);
 
 	return 1;
 }
@@ -3813,19 +3819,27 @@ int ext4_set_gps(struct inode *inode)
 int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 {
 	struct ext4_inode_info *ei;
+	int age;
 
 	if (!inode || !loc)
 		return -EFAULT;
 	printk("***ext4_get_gps is called***\n");
 
 	ei = EXT4_I(inode);
+	read_lock(&ei->info_lock);
 
-	read_lock(&gps_lock);
-	loc.latitude = (le64_to_cpu)ei->inode_gps.latitude;
-	loc.longitude = (le64_to_cpu)ei->inode_gps.longitude;
-	loc.accuracy = (le32_to_cpu)ei->inode_gps.accuracy;
+	/* from __u64 to double */
+//	loc->latitude = ei->i_gps.latitude;
+//	loc->longitude =  (unsigned long long)ei->i_gps.longitude;
+//	loc->accuracy = *((float *)&ei->i_gps.accuracy);
+//	age = *((int *)&ei->i_gps.age);
 
-	read_unlock(&gps_lock);
+	read_unlock(&ei->info_lock);
+	
+
+//	if (age < 0)
+//		return -EFAULT;
+//	return age;
 	return 0;
 }
 

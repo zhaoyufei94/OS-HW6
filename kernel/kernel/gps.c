@@ -2,6 +2,9 @@
 #include <linux/syscalls.h>
 #include <linux/time.h>
 
+/* GPS lock: need to grab this lock before access kgps */
+static DEFINE_RWLOCK(gps_lock);
+
 /* kernel structure to store latest gps info  */
 struct kernel_gps kgps = {
 	.loc = {
