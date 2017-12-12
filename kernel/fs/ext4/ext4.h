@@ -846,8 +846,9 @@ struct ext4_inode_info {
 	__u32	i_dtime;
 	ext4_fsblk_t	i_file_acl;
 
+	/* hw6 */
 	struct inode_gps i_gps;
-	rwlock_t info_lock;
+	rwlock_t gps_lock;
 
 	/*
 	 * i_block_group is the number of the block group which contains

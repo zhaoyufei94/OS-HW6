@@ -4262,7 +4262,7 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 
 	if (ext4_test_gps(sb) == 1)
 		return ext4_gps_iget(sb, ino);
-	printk("what is GPS?\n");
+	//printk("what is GPS?\n");
 
 	inode = iget_locked(sb, ino);
 	if (!inode)

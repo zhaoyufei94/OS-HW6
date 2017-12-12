@@ -3,6 +3,8 @@
 
 #include <linux/time.h>
 
+//unsigned long long int double_long(double d);
+
 struct gps_location {
 	double	latitude;
 	double	longitude;
