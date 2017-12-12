@@ -215,6 +215,7 @@ extern struct trace_event_functions exit_syscall_print_funcs;
 #endif
 /*GPS*/
 asmlinkage long sys_set_gps_location(struct gps_location __user *loc);
+asmlinkage long sys_get_gps_location(const char __user *pathname, struct gps_location __user *loc);
 
 asmlinkage long sys_time(time_t __user *tloc);
 asmlinkage long sys_stime(time_t __user *tptr);
