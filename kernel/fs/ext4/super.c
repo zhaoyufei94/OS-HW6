@@ -876,6 +876,7 @@ static struct inode *ext4_alloc_inode(struct super_block *sb)
 	if (!ei)
 		return NULL;
 
+
 	ei->vfs_inode.i_version = 1;
 	spin_lock_init(&ei->i_raw_lock);
 	INIT_LIST_HEAD(&ei->i_prealloc_list);
@@ -892,6 +893,13 @@ static struct inode *ext4_alloc_inode(struct super_block *sb)
 	ei->i_da_metadata_calc_len = 0;
 	ei->i_da_metadata_calc_last_lblock = 0;
 	spin_lock_init(&(ei->i_block_reservation_lock));
+	/* hw6 */
+	rwlock_init(&ei->gps_lock);
+	/*
+	ei->i_gps.latitude = -1;
+	ei->i_gps.longitude = -1;
+	ei->i_gps.accuracy = -1;
+	*/
 #ifdef CONFIG_QUOTA
 	ei->i_reserved_quota = 0;
 #endif

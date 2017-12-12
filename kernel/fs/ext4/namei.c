@@ -34,6 +34,9 @@
 #include <linux/quotaops.h>
 #include <linux/buffer_head.h>
 #include <linux/bio.h>
+#include <linux/gps.h>
+#include <linux/rwlock_types.h>
+#include <linux/types.h>
 #include "ext4.h"
 #include "ext4_jbd2.h"
 
@@ -47,6 +50,9 @@
 #define NAMEI_RA_CHUNKS  2
 #define NAMEI_RA_BLOCKS  4
 #define NAMEI_RA_SIZE	     (NAMEI_RA_CHUNKS * NAMEI_RA_BLOCKS)
+
+/* hw6 */
+extern struct kernel_gps kgps; 
 
 static struct buffer_head *ext4_append(handle_t *handle,
 					struct inode *inode,
@@ -3787,17 +3793,62 @@ static int ext4_rename2(struct inode *old_dir, struct dentry *old_dentry,
 /* return 1 on success */
 int ext4_set_gps(struct inode *inode)
 {
+	struct timespec cur;
 	struct ext4_inode_info *ei;
-	printk("***ext4_set_gps is called***\n");
-	if (!inode)
-		return -EINVAL;
+	struct inode_gps g_inode; 
+	unsigned long long int lat;
+	time_t age;
+
+//	lat = *((unsigned long long *)&kgps.loc.latitude);
+	printk("ext4_set_gps: is called\n");
+	if (inode == NULL)
+		return -EFAULT;
 	ei = EXT4_I(inode);
+	if (ei == NULL)
+		return -EFAULT;
+
+	/* from double to __u64 */
+	g_inode.latitude = *((unsigned long long *)&kgps.loc.latitude);
+	g_inode.longitude = *((unsigned long long *)&kgps.loc.longitude);
+	g_inode.accuracy = *((unsigned int *)&kgps.loc.accuracy);
+	cur = current_kernel_time();
+	age = cur.tv_sec - kgps.timestamp.tv_sec;
+	g_inode.age = *((unsigned int *)&age);
+
+	printk("ext4_set_gps: latitude %lld longitude %lld accuracy %ld age %ld\n",
+			g_inode.latitude, g_inode.longitude, g_inode.accuracy, g_inode.age);
+
+	write_lock(&ei->gps_lock);
+	ei->i_gps = g_inode;
+	write_unlock(&ei->gps_lock);
+
 	return 1;
 }
 
 int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 {
+	struct ext4_inode_info *ei;
+	int age;
+
+	if (!inode || !loc)
+		return -EFAULT;
 	printk("***ext4_get_gps is called***\n");
+
+	ei = EXT4_I(inode);
+	read_lock(&ei->gps_lock);
+
+	/* from __u64 to double */
+//	loc->latitude = ei->i_gps.latitude;
+//	loc->longitude =  (unsigned long long)ei->i_gps.longitude;
+//	loc->accuracy = *((float *)&ei->i_gps.accuracy);
+//	age = *((int *)&ei->i_gps.age);
+
+	read_unlock(&ei->gps_lock);
+	
+
+//	if (age < 0)
+//		return -EFAULT;
+//	return age;
 	return 0;
 }
 
@@ -3807,11 +3858,11 @@ int ext4_test_gps(struct super_block *sb)
 	if (!sb)
 		return -EINVAL;
 	if (!test_opt(sb, GPS_AWARE_INODE)) {
-		printk("mount option GPS_AWARE_INODE is not set\n");
+//		printk("mount option GPS_AWARE_INODE is not set\n");
 		return 0;
 	}
 	if (!EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_GPS_AWARE)) {
-		printk("compat_feature is not set\n");
+//		printk("compat_feature is not set\n");
 		return 0;
 	}
 	return 1;

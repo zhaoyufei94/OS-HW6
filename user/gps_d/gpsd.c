@@ -6,12 +6,13 @@
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/syscall.h>
 
 #include "gpsd.h"
 
 
 #define SET_GPS 245
-#define GPS_FILE "/data/media/0/gps_location.txt"
+#define GPS_LOCATION_FILE "/data/media/0/gps_location.txt"
 
 static struct gps_location gps_generator(int i)
 {
@@ -82,7 +83,7 @@ int main(int argc, char *argv[])
 			
 		}
 
-		if (syscall(__NR_set_gps_location, &gps) < 0)
+		if (syscall(SET_GPS, &gps) < 0)
 			printf("[%d]error: %s\n", i, strerror(errno));
 		else
 		       printf("[%d]success: set GPS location\n", i);	
