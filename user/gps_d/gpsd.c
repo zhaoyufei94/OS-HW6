@@ -6,19 +6,29 @@
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/syscall.h>
 
 #include "gpsd.h"
 
 
 #define SET_GPS 245
-#define GPS_FILE "/data/media/0/gps_location.txt"
+#define GPS_LOCATION_FILE "/data/media/0/gps_location.txt"
 
 static struct gps_location gps_generator(int i)
 {
 	struct gps_location new;
-	new.latitude = 10.1 * i;
-	new.longitude = 12.3 * i;
-	new.accuracy = 3.2 * i;
+	FILE *file = NULL;
+
+	new.latitude = i;
+	new.longitude = i;
+	new.accuracy = i;
+
+	file = fopen(GPS_LOCATION_FILE, "w");
+	if (!file)
+		printf("Failed to open GPS file\n");
+	fprintf(file, "%d\n%d\n%d\n", i, i, i);
+	fclose(file);
+
 	return new;
 }
 
@@ -82,12 +92,12 @@ int main(int argc, char *argv[])
 			
 		}
 
-		if (syscall(__NR_set_gps_location, &gps) < 0)
+		if (syscall(SET_GPS, &gps) < 0)
 			printf("[%d]error: %s\n", i, strerror(errno));
 		else
 		       printf("[%d]success: set GPS location\n", i);	
 out:
-		sleep(1);
+		sleep(i);
 		if (i++ == 10)
 			exit = 1;
 	}

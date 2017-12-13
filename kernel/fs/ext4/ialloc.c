@@ -668,7 +668,7 @@ struct inode *__ext4_new_inode(handle_t *handle, struct inode *dir,
 	ei = EXT4_I(inode);
 	sbi = EXT4_SB(sb);
 
-	/* Set GPS info in inode */
+	/* Set GPS info in inode 
 	if (inode->i_op->set_gps_location) {
 		printk("this inode has set_gps operation\n");
 		inode->i_op->set_gps_location(inode);
@@ -676,6 +676,7 @@ struct inode *__ext4_new_inode(handle_t *handle, struct inode *dir,
 		printk("this inode has no set_gps operation\n");
 		ext4_set_gps(inode);
 	}
+	*/
 	/*
 	 * Initalize owners and quota early so that we don't have to account
 	 * for quota initialization worst case in standard inode creating

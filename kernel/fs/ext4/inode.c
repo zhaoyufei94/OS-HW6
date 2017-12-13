@@ -4122,10 +4122,12 @@ static inline void ext4_iget_extra_inode(struct inode *inode,
 		EXT4_I(inode)->i_inline_off = 0;
 }
 
+
 struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 {
 	struct ext4_iloc iloc;
 	struct ext4_inode *raw_inode;
+	struct ext4_gps_inode *raw_gps_inode;
 	//void *raw_inode;
 	struct ext4_inode_info *ei;
 	struct inode *inode;
@@ -4134,6 +4136,9 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 	int block;
 	uid_t i_uid;
 	gid_t i_gid;
+
+		//return ext4_gps_iget(sb, ino);
+	//printk("what is GPS?\n");
 
 	inode = iget_locked(sb, ino);
 	if (!inode)
@@ -4158,10 +4163,25 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 		raw_inode = ext4_raw_inode(&iloc);
 	}
 	*/
+	if (ext4_test_gps(sb) == 1) {
+		//struct ext4_gps_inode *raw_inode;
+		printk("I know GPS!\n");
+		raw_gps_inode = ext4_raw_gps_inode(&iloc);
+		raw_inode = &raw_gps_inode->raw_inode;
+		
+		ei->i_gps.latitude	= le64_to_cpu(raw_gps_inode->i_latitude);
+		ei->i_gps.longitude	= le64_to_cpu(raw_gps_inode->i_longitude);
+		ei->i_gps.accuracy	= le32_to_cpu(raw_gps_inode->i_accuracy);
+		ei->i_gps.age		= le32_to_cpu(raw_gps_inode->i_coord_age);
+		
+	} else {
+		//struct ext4_inode *raw_inode;
+		raw_inode = ext4_raw_inode(&iloc);
+		raw_gps_inode = NULL;
+		;
+	}
 
-	raw_inode = ext4_raw_inode(&iloc);
-	if (ext4_test_gps(sb) == 1)
-		raw_inode = (struct ext4_gps_inode *) (raw_inode);
+	//raw_inode = ext4_raw_gps_inode(&iloc);
 
 	if (EXT4_INODE_SIZE(inode->i_sb) > EXT4_GOOD_OLD_INODE_SIZE) {
 		ei->i_extra_isize = le16_to_cpu(raw_inode->i_extra_isize);
@@ -4416,7 +4436,8 @@ static int ext4_do_update_inode(handle_t *handle,
 				struct inode *inode,
 				struct ext4_iloc *iloc)
 {
-	struct ext4_inode *raw_inode = ext4_raw_inode(iloc);
+	struct ext4_inode *raw_inode;
+	struct ext4_gps_inode *raw_gps_inode;
 	struct ext4_inode_info *ei = EXT4_I(inode);
 	struct buffer_head *bh = iloc->bh;
 	int err = 0, rc, block;
@@ -4424,7 +4445,23 @@ static int ext4_do_update_inode(handle_t *handle,
 	uid_t i_uid;
 	gid_t i_gid;
 
-	/* For fields not not tracking in the in-memory inode,
+
+	spin_lock(&ei->i_raw_lock);
+
+	if (ext4_test_gps(inode->i_sb) == 1) {
+		printk("ext4_do_update_inode: GPS AWARE!\n");
+		raw_gps_inode = ext4_raw_gps_inode(iloc);
+		raw_inode = &raw_gps_inode->raw_inode;
+		raw_gps_inode->i_latitude = cpu_to_le64(ei->i_gps.latitude);
+		raw_gps_inode->i_longitude = cpu_to_le64(ei->i_gps.longitude);
+		raw_gps_inode->i_accuracy = cpu_to_le32(ei->i_gps.accuracy);
+		raw_gps_inode->i_coord_age = cpu_to_le32(ei->i_gps.age);
+	} else {
+		raw_inode = ext4_raw_inode(iloc);
+		raw_gps_inode = NULL;
+	}
+
+	/* For fields not tracked in the in-memory inode,
 	 * initialise them to zero for new inodes. */
 	if (ext4_test_inode_state(inode, EXT4_STATE_NEW))
 		memset(raw_inode, 0, EXT4_SB(inode->i_sb)->s_inode_size);
