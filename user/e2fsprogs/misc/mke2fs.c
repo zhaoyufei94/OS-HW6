@@ -1997,6 +1997,7 @@ profile_error:
 	}
 	edit_feature(fs_features ? fs_features : tmp,
 		     &fs_param.s_feature_compat);
+	fs_param.s_feature_compat = fs_param.s_feature_compat | EXT4_FEATURE_COMPAT_GPS_AWARE;
 	if (tmp)
 		free(tmp);
 	(void) ext2fs_free_mem(&fs_features);
