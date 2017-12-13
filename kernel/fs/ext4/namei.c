@@ -3806,9 +3806,15 @@ int ext4_set_gps(struct inode *inode)
 		return -EFAULT;
 
 	/* from double to __u64 */
+	/*
 	g_inode.latitude = *((unsigned long long *)&kgps.loc.latitude);
 	g_inode.longitude = *((unsigned long long *)&kgps.loc.longitude);
 	g_inode.accuracy = *((unsigned int *)&kgps.loc.accuracy);
+	*/
+	memcpy(&g_inode.latitude, &kgps.loc.latitude, 8);
+	memcpy(&g_inode.longitude, &kgps.loc.longitude, 8);
+	memcpy(&g_inode.accuracy, &kgps.loc.accuracy, 8);
+
 	cur = current_kernel_time();
 	age = cur.tv_sec - kgps.timestamp.tv_sec;
 	g_inode.age = *((unsigned int *)&age);
@@ -3827,7 +3833,7 @@ int ext4_set_gps(struct inode *inode)
 int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 {
 	struct ext4_inode_info *ei;
-	struct gps_location coordinates;
+	//struct gps_location coordinates;
 	int age;
 	
 	printk("***ext4_get_gps is called***\n");
@@ -3837,17 +3843,22 @@ int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 
 	ei = EXT4_I(inode);
 	read_lock(&ei->gps_lock);
-
+	/*
 	coordinates.latitude = *(double *)&ei->i_gps.latitude;
 	coordinates.longitude = *(double *)&ei->i_gps.longitude;
 	coordinates.accuracy = *(float *)&ei->i_gps.accuracy;
+	*/
+
+	memcpy(&loc->latitude, &ei->i_gps.latitude, 8);
+	memcpy(&loc->longitude, &ei->i_gps.longitude, 8);
+	memcpy(&loc->accuracy, &ei->i_gps.accuracy, 8);
 
 	age = (int)ei->i_gps.age;
 	if (age < 0)
 		return -EFAULT;
 	read_unlock(&ei->gps_lock);
 
-	loc = &coordinates;
+	//loc = &coordinates;
 	
 	return age;
 }

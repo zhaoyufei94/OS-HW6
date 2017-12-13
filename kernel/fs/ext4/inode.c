@@ -4260,8 +4260,7 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 	uid_t i_uid;
 	gid_t i_gid;
 
-	if (ext4_test_gps(sb) == 1)
-		return ext4_gps_iget(sb, ino);
+		//return ext4_gps_iget(sb, ino);
 	//printk("what is GPS?\n");
 
 	inode = iget_locked(sb, ino);
@@ -4287,8 +4286,22 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 		raw_inode = ext4_raw_inode(&iloc);
 	}
 	*/
+	if (ext4_test_gps(sb) == 1) {
+		struct ext4_gps_inode *raw_gps_inode;
+		printk("I know GPS!\n");
+		raw_gps_inode = ext4_raw_gps_inode(&iloc);
+		raw_inode = &raw_gps_inode->raw_inode;
+		/*
+		ei->i_gps.latitude	= le64_to_cpu(raw_inode->i_latitude);
+		ei->i_gps.longitude	= le64_to_cpu(raw_inode->i_longitude);
+		ei->i_gps.accuracy	= le32_to_cpu(raw_inode->i_accuracy);
+		ei->i_gps.age		= le32_to_cpu(raw_inode->i_coord_age);
+		*/
+	} else {
+		raw_inode = ext4_raw_inode(&iloc);
+	}
 
-	raw_inode = ext4_raw_inode(&iloc);
+	//raw_inode = ext4_raw_inode(&iloc);
 
 	if (EXT4_INODE_SIZE(inode->i_sb) > EXT4_GOOD_OLD_INODE_SIZE) {
 		ei->i_extra_isize = le16_to_cpu(raw_inode->i_extra_isize);

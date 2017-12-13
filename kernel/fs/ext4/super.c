@@ -1363,6 +1363,7 @@ static const struct mount_opts {
 	int	mount_opt;
 	int	flags;
 } ext4_mount_opts[] = {
+	{Opt_gps_aware_inode, EXT4_MOUNT_GPS_AWARE_INODE, MOPT_EXT4_ONLY},
 	{Opt_minix_df, EXT4_MOUNT_MINIX_DF, MOPT_SET},
 	{Opt_bsd_df, EXT4_MOUNT_MINIX_DF, MOPT_CLEAR},
 	{Opt_grpid, EXT4_MOUNT_GRPID, MOPT_SET},
@@ -1517,6 +1518,14 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
 
 	if (m->flags & MOPT_NOSUPPORT) {
 		ext4_msg(sb, KERN_ERR, "%s option not supported", opt);
+	} else if (token == Opt_gps_aware_inode) {
+		if (EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_GPS_AWARE)) {
+			set_opt(sb, GPS_AWARE_INODE);
+			printk("mount option GPS_AWARE_INODE is set\n");
+		} else {
+			ext4_msg(sb, KERN_ERR, "fs to be mounted is not GPS_AWARE");
+			return -1;
+		}
 	} else if (token == Opt_commit) {
 		if (arg == 0)
 			arg = JBD2_DEFAULT_MAX_COMMIT_AGE;
@@ -3641,8 +3650,8 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
 		       "feature flags set on rev 0 fs, "
 		       "running e2fsck is recommended");
 	/* GPS */
-	if (EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_GPS_AWARE))
-		set_opt(sb, GPS_AWARE_INODE);
+	//if (EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_GPS_AWARE))
+	//	set_opt(sb, GPS_AWARE_INODE);
 
 	if (es->s_creator_os == cpu_to_le32(EXT4_OS_HURD)) {
 		set_opt2(sb, HURD_COMPAT);

@@ -6,3 +6,4 @@ build-emu/
 build-mmaster/
 user/e2fsprogs/
 hmwk6.fs
+user/gps_d/Makefile

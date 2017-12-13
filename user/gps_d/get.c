@@ -29,6 +29,9 @@ int main(int argc, char *argv[])
 		printf("error: %s\n", strerror(errno));
 		return 0;
 	} else {
+		printf("lat: %f\n", gps.latitude);
+		printf("log: %f\n", gps.longitude);
+		printf("acc: %f\n", gps.accuracy);
 		printf("age: %d\n", age);
 		return 0;
 	}

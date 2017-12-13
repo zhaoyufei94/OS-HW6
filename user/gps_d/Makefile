@@ -1,6 +1,6 @@
 TARGET=gpsd
-//SOURCES=gpsd.c
-SOURCES=get.c
+SOURCES=gpsd.c
+//SOURCES=get.c
 
 # You probably don't need to change below
 
