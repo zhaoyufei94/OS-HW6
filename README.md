@@ -1,6 +1,9 @@
-#hmwk6
+# hmwk6
+
 yz3170 Yufei Zhao
-sh     Shijun Hou
+
+sh3658 Shijun Hou
+
 hl3069 Han Li
 
 ## Structure of hmwk6.fs
