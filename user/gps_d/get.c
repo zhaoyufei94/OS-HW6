@@ -8,6 +8,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/syscall.h>
 
 #include "gpsd.h"
 
@@ -35,5 +36,4 @@ int main(int argc, char *argv[])
 		printf("age: %d\n", age);
 		return 0;
 	}
-
 }

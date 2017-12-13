@@ -150,9 +150,16 @@ static int get_gps_info(const char *kpath, struct gps_location *loc)
 
 	if (!kinode)
 		return -EFAULT;
-	
-	if (kinode->i_op->get_gps_location)
+
+	if (kinode->i_op->get_gps_location) {
 		age = kinode->i_op->get_gps_location(kinode, loc);
+		if (age < 0)
+			return -EFAULT;
+	}
+	printk("syscall 246: inode #%lu ", kinode->i_ino);
+	printk("lat %llu lng %llu acc %u\n", *(unsigned long long *)&loc->latitude, *(unsigned long long *)&loc->longitude,
+			*(unsigned int *)&loc->accuracy);
+
 	path_put(&kkpath);
 
 	return age;
@@ -194,6 +201,7 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, pathname, struct gps_loca
 		kfree(kpath);
 		return -ENODEV;
 	}
+
 	
 	copy = copy_to_user(loc, &kloc, sizeof(struct gps_location));
 	if (copy < 0) {

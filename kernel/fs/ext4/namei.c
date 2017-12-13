@@ -3798,7 +3798,6 @@ int ext4_set_gps(struct inode *inode)
 	struct inode_gps g_inode; 
 	time_t age;
 
-	printk("ext4_set_gps: is called\n");
 	if (inode == NULL)
 		return -EFAULT;
 	ei = EXT4_I(inode);
@@ -3817,11 +3816,14 @@ int ext4_set_gps(struct inode *inode)
 
 	cur = current_kernel_time();
 	age = cur.tv_sec - kgps.timestamp.tv_sec;
-	g_inode.age = *((unsigned int *)&age);
-
-	printk("ext4_set_gps: latitude %llu longitude %llu accuracy %u age %u\n",
-			g_inode.latitude, g_inode.longitude, g_inode.accuracy, g_inode.age);
-
+	
+	if (g_inode.latitude == 0 && g_inode.longitude == 0 && g_inode.accuracy ==0)
+		g_inode.age = 0;	/* kgps has never been modified */
+	else {
+//		printk("ext4_set_gps: inode #%lu latitude %llu longitude %llu accuracy %u age %u\n",
+//			inode->i_ino, g_inode.latitude, g_inode.longitude, g_inode.accuracy, g_inode.age);
+		g_inode.age = *((unsigned int *)&age);
+	}
 	write_lock(&ei->gps_lock);
 	ei->i_gps = g_inode;
 	mark_inode_dirty(inode);
@@ -3833,7 +3835,6 @@ int ext4_set_gps(struct inode *inode)
 int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 {
 	struct ext4_inode_info *ei;
-	//struct gps_location coordinates;
 	int age;
 	
 	printk("***ext4_get_gps is called***\n");
@@ -3841,25 +3842,25 @@ int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 	if (!loc || !inode)
 		return -EFAULT;
 
+
 	ei = EXT4_I(inode);
 	read_lock(&ei->gps_lock);
-	/*
-	coordinates.latitude = *(double *)&ei->i_gps.latitude;
-	coordinates.longitude = *(double *)&ei->i_gps.longitude;
-	coordinates.accuracy = *(float *)&ei->i_gps.accuracy;
-	*/
 
 	memcpy(&loc->latitude, &ei->i_gps.latitude, 8);
 	memcpy(&loc->longitude, &ei->i_gps.longitude, 8);
 	memcpy(&loc->accuracy, &ei->i_gps.accuracy, 8);
 
 	age = (int)ei->i_gps.age;
+
+	
+	//printk("ext4_get_gps: inode #%lu lat %llu lng %llu accuracy %u age %d\n", inode->i_ino, *(unsigned long long *)&loc->latitude,
+	//	*(unsigned long long *)&loc->longitude, *(unsigned int *)&loc->accuracy, age);
+
+	read_unlock(&ei->gps_lock);
 	if (age < 0)
 		return -EFAULT;
-	read_unlock(&ei->gps_lock);
 
-	//loc = &coordinates;
-	
+
 	return age;
 }
 
