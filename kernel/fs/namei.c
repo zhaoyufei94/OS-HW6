@@ -2336,12 +2336,12 @@ int vfs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
 		return error;
 	/* Set GPS if necessary*/
 	if (dir->i_op->set_gps_location) {
-	//	printk("vfs_create: call set gps hook\n");
+		printk("vfs_create: inode %lu calls set gps\n", dir->i_ino);
 		if (dir->i_op->set_gps_location(dir) < 0)
 			return -EFAULT;
+	} else {
+		printk("vfs_create: this inode has no set_gps function\n");
 	}
-//	else
-//		printk("vfs_create: this inode has no set_gps function\n");
 	if (!error)
 		fsnotify_create(dir, dentry);
 	return error;

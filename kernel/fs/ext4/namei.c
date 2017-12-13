@@ -3339,7 +3339,7 @@ int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 	struct ext4_inode_info *ei;
 	int age;
 	
-	printk("***ext4_get_gps is called***\n");
+	printk("***ext4_get_gps is called, inode: %lu***\n", inode->i_ino);
 
 	if (!loc || !inode)
 		return -EFAULT;

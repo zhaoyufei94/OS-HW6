@@ -11,8 +11,6 @@
 #include "gpsd.h"
 
 
-#define SET_GPS 245
-#define GPS_LOCATION_FILE "/data/media/0/gps_location.txt"
 
 static struct gps_location gps_generator(int i)
 {
@@ -49,14 +47,14 @@ static int gps_reader(FILE *gps_file, struct gps_location *loc)
 		switch (num) {
 			case 0:
 				loc->latitude = strtod(line, NULL);
-				printf("lat=%f\n", loc->latitude);
+				//printf("lat=%f\n", loc->latitude);
 				break;
 			case 1:
 				loc->longitude = strtod(line, NULL);
 				break;
 			case 2:
 				loc->accuracy = strtof(line, NULL);
-				printf("acc=%f\n", loc->accuracy);
+				//printf("acc=%f\n", loc->accuracy);
 		}
 	}
 	return 0;
@@ -68,38 +66,72 @@ int main(int argc, char *argv[])
 	int exit = 0, i = 1;
 	FILE *gps_file = NULL;
 
-	gps_file = fopen(GPS_LOCATION_FILE, "w");
-	if (!gps_file)
-		printf("Failed to open GPS file\n");
-	fprintf(gps_file, "%s", "40.80548105\n-73.96202195\n247.0\n");
-	fclose(gps_file);
+	printf("turning into daemon\n");
+	daemon_mode();
 
+	//fprintf(gps_file, "%s", "40.80548105\n-73.96202195\n247.0\n");
+	
 	while (!exit) {
+		//gps_file = fopen(GPS_LOCATION_FILE, "w");
+		//if (!gps_file)
+		//	printf("Failed to open GPS file\n");
+		switch (i) {
+			case 1:
+				gps_file = fopen(GPS_LOCATION_FILE, "w");
+				fprintf(gps_file, "%s", "40.80548105\n-73.96202195\n247.0\n");
+				fclose(gps_file);
+				break;
+			case 3:
+				gps_file = fopen(GPS_LOCATION_FILE, "w");
+				fprintf(gps_file, "%s", "40.809934\n-73.960617\n120.4\n");
+				fclose(gps_file);
+				break;
+			case 4:
+				gps_file = fopen(GPS_LOCATION_FILE, "w");
+				fprintf(gps_file, "%s", "40.808935\n-73.960992\n34.9\n");
+				fclose(gps_file);
+				break;
+			case 6:
+				gps_file = fopen(GPS_LOCATION_FILE, "w");
+				fprintf(gps_file, "%s", "40.807217\n-73.961873\n198.3\n");
+				fclose(gps_file);
+				break;
+			case 8:
+				gps_file = fopen(GPS_LOCATION_FILE, "w");
+				fprintf(gps_file, "%s", "40.807826\n-73.963364\n77.6\n");
+				fclose(gps_file);
+				break;
+			case 9:
+				gps_file = fopen(GPS_LOCATION_FILE, "w");
+				fprintf(gps_file, "%s", "40.806892\n-73.962806\n156.2\n");
+				fclose(gps_file);
+				break;
+		}
+		//fclose(gps_file);
+
 		if (argc > 1 && !strcmp(argv[1], "-e")) {
 			gps = gps_generator(i);
 		} else {
 			gps_file = fopen(GPS_LOCATION_FILE, "r");
 			if (!gps_file) {
-				printf("[%d]error: Failed to open GPS file!\n", i);
-				fclose(gps_file);
-				goto out;
+				printf("error: Failed to open GPS file!\n");
+				return 0;
 			}
 			if (gps_reader(gps_file, &gps) < 0) {
-				printf("[%d]error: Failed to read GPS data\n", i);
+				printf("error: Failed to read GPS data\n");
 				fclose(gps_file);
-				goto out;
+				return 0;
 			}
 			
 		}
+		if (syscall(__NR_set_gps_location, &gps) < 0) {
+			printf("error: %s\n", strerror(errno));
+			return 0;
+		}
 
-		if (syscall(SET_GPS, &gps) < 0)
-			printf("[%d]error: %s\n", i, strerror(errno));
-		else
-		       printf("[%d]success: set GPS location\n", i);	
-out:
-		sleep(i);
+		sleep(1);
 		if (i++ == 10)
-			exit = 1;
+			i = 1;
 	}
 	return 0;
 }

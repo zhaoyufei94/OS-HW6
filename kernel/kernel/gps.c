@@ -69,10 +69,10 @@ static int check_valid(struct gps_location *u_gps)
 	if (ulat == klat && ulog == klog && uacc == kacc)
 		return 0;
 
-	printk("need update!\n");
-	printk("lat: %llu -> %llu\n", klat, ulat);
-	printk("log: %llu -> %llu\n", klog, ulog);
-	printk("acc: %d -> %d\n", kacc, uacc);
+	//printk("need update!\n");
+	//printk("lat: %llu -> %llu\n", klat, ulat);
+	//printk("log: %llu -> %llu\n", klog, ulog);
+	//printk("acc: %d -> %d\n", kacc, uacc);
 
 	return 1;
 }
@@ -98,10 +98,10 @@ SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc)
 	if (update == 1) {
 		write_lock(&gps_lock);
 		memcpy(k_gps, &u_gps, sizeof(struct gps_location));
-		printk("update!\n");
+		//printk("update!\n");
 		kgps.timestamp = current_kernel_time();
-		printk("current time:\n");
-		printk("%ld %ld\n\n", kgps.timestamp.tv_sec, kgps.timestamp.tv_nsec);
+		//printk("current time:\n");
+		//printk("%ld %ld\n\n", kgps.timestamp.tv_sec, kgps.timestamp.tv_nsec);
 		write_unlock(&gps_lock);
 	}
 
@@ -157,8 +157,8 @@ static int get_gps_info(const char *kpath, struct gps_location *loc)
 			return -EFAULT;
 	}
 	printk("syscall 246: inode #%lu ", kinode->i_ino);
-	printk("lat %llu lng %llu acc %u\n", *(unsigned long long *)&loc->latitude, *(unsigned long long *)&loc->longitude,
-			*(unsigned int *)&loc->accuracy);
+	//printk("lat %llu lng %llu acc %u\n", *(unsigned long long *)&loc->latitude, *(unsigned long long *)&loc->longitude,
+	//		*(unsigned int *)&loc->accuracy);
 
 	path_put(&kkpath);
 
@@ -179,7 +179,7 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, pathname, struct gps_loca
 		return -ENOMEM;
 
 	age = (int) strncpy_from_user(kpath, pathname, path_size);
-	printk("actual copy %d bytes from userspace\n", age);
+	//printk("actual copy %d bytes from userspace\n", age);
 	if (age < 0) {
 		kfree(kpath);
 		return -EFAULT;
@@ -187,7 +187,7 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, pathname, struct gps_loca
 		kfree(kpath);
 		return -ENAMETOOLONG;
 	}
-	printk("kpath = %s\n", kpath);
+	//printk("kpath = %s\n", kpath);
 
 	age = access(pathname);
 	if (age < 0) {

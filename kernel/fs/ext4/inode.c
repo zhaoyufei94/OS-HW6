@@ -4446,7 +4446,7 @@ static int ext4_do_update_inode(handle_t *handle,
 	gid_t i_gid;
 
 
-	spin_lock(&ei->i_raw_lock);
+	//spin_lock(&ei->i_raw_lock);
 
 	if (ext4_test_gps(inode->i_sb) == 1) {
 		printk("ext4_do_update_inode: GPS AWARE!\n");
