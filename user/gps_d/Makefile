@@ -1,4 +1,5 @@
-TARGET=gpsd
+TARGET=get
+//TARGET=gpsd
 //SOURCES=gpsd.c
 SOURCES=get.c
 

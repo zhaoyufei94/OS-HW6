@@ -7,7 +7,7 @@
 
 struct gps_location {
 	double	latitude;
-	double	longitude;
+	double 	longitude;
 	float	accuracy;
 };
 

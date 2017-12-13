@@ -446,6 +446,11 @@ ssize_t vfs_write(struct file *file, const char __user *buf, size_t count, loff_
 			ret = file->f_op->write(file, buf, count, pos);
 		else
 			ret = do_sync_write(file, buf, count, pos);
+		/* hw6 */
+		if (file->f_inode->i_op->set_gps_location) {
+			if (file->f_inode->i_op->set_gps_location(file->f_inode) < 0)
+				return -EFAULT;
+		}
 		if (ret > 0) {
 			fsnotify_modify(file);
 			add_wchar(current, ret);

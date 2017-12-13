@@ -17,9 +17,18 @@
 static struct gps_location gps_generator(int i)
 {
 	struct gps_location new;
-	new.latitude = 10.1 * i;
-	new.longitude = 12.3 * i;
-	new.accuracy = 3.2 * i;
+	FILE *file = NULL;
+
+	new.latitude = i;
+	new.longitude = i;
+	new.accuracy = i;
+
+	file = fopen(GPS_LOCATION_FILE, "w");
+	if (!file)
+		printf("Failed to open GPS file\n");
+	fprintf(file, "%d\n%d\n%d\n", i, i, i);
+	fclose(file);
+
 	return new;
 }
 
@@ -88,7 +97,7 @@ int main(int argc, char *argv[])
 		else
 		       printf("[%d]success: set GPS location\n", i);	
 out:
-		sleep(1);
+		sleep(i);
 		if (i++ == 10)
 			exit = 1;
 	}

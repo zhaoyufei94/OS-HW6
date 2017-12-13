@@ -8,6 +8,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/syscall.h>
 
 #include "gpsd.h"
 
@@ -29,8 +30,7 @@ int main(int argc, char *argv[])
 		printf("error: %s\n", strerror(errno));
 		return 0;
 	} else {
-		printf("age: %d\n", age);
+		printf("age: %d latitude: %llu longitude: %llu accuracy: %lu\n", age, gps.latitude, gps.longitude, gps.accuracy);
 		return 0;
 	}
-
 }
