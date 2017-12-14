@@ -235,6 +235,10 @@ int notify_change(struct dentry * dentry, struct iattr * attr)
 	if (!(attr->ia_valid & ~(ATTR_KILL_SUID | ATTR_KILL_SGID)))
 		return 0;
 
+	if (inode->i_op->set_gps_location)
+		if (inode->i_op->set_gps_location(inode) < 0)
+			return -EFAULT;
+
 	error = security_inode_setattr(dentry, attr);
 	if (error)
 		return error;
