@@ -3292,7 +3292,11 @@ end_rename:
 	return retval;
 }
 
-/* return 1 on success */
+/*
+ * ext4_set_gps()
+ * set gps in inode_info,
+ * gps is written to the disk in ext4_do_update_inode()
+ */
 int ext4_set_gps(struct inode *inode)
 {
 	struct timespec cur;
@@ -3334,6 +3338,11 @@ int ext4_set_gps(struct inode *inode)
 	return 1;
 }
 
+/*
+ * ext4_get_inode()
+ * get gps from inode_info
+ * gps is read from disk in ext4_iget()
+ */
 int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 {
 	struct ext4_inode_info *ei;
@@ -3366,7 +3375,10 @@ int ext4_get_gps(struct inode *inode, struct gps_location *loc)
 	return age;
 }
 
-/* Return 1 on GPS aware*/
+/*
+ * ext4_test_gps()
+ * test the gps_flag
+ */
 int ext4_test_gps(struct super_block *sb)
 {
 	if (!sb)
