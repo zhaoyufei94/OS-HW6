@@ -708,64 +708,7 @@ struct ext4_inode {
  */
 struct ext4_gps_inode {
 	struct ext4_inode raw_inode;
-/*	__le16	i_mode;
-	__le16	i_uid;
-	__le32	i_size_lo;
-	__le32	i_atime;
-	__le32	i_ctime;
-	__le32	i_mtime;	__le32	i_dtime;
-	__le32	i_dtime;
-	__le16	i_gid;
-	__le16	i_links_count;
-	__le32	i_blocks_lo;
-	__le32	i_flags;
-	union {
-		struct {
-			__le32  l_i_version;
-		} linux1;
-		struct {
-			__u32  h_i_translator;
-		} hurd1;
-		struct {
-			__u32  m_i_reserved1;
-		} masix1;
-	} osd1;	
-	__le32	i_block[EXT4_N_BLOCKS];
-	__le32	i_generation;
-	__le32	i_file_acl_lo;
-	__le32	i_size_high;
-	__le32	i_obso_faddr;
-	union {
-		struct {
-			__le16	l_i_blocks_high;
-			__le16	l_i_file_acl_high;
-			__le16	l_i_uid_high;
-			__le16	l_i_gid_high;
-			__le16	l_i_checksum_lo;
-			__le16	l_i_reserved;
-		} linux2;
-		struct {
-			__le16	h_i_reserved1;
-			__u16	h_i_mode_high;
-			__u16	h_i_uid_high;
-			__u16	h_i_gid_high;
-			__u32	h_i_author;
-		} hurd2;
-		struct {
-			__le16	h_i_reserved1;
-			__le16	m_i_file_acl_high;
-			__u32	m_i_reserved2[2];
-		} masix2;
-	} osd2;	
-	__le16	i_extra_isize;
-	__le16	i_checksum_hi;
-	__le32  i_ctime_extra;
-	__le32  i_mtime_extra;
-	__le32  i_atime_extra;
-	__le32  i_crtime;
-	__le32  i_crtime_extra;
-	__le32  i_version_hi;
-*/	__le64	i_latitude;
+	__le64	i_latitude;
 	__le64	i_longitude;
 	__le32	i_accuracy;
 	__le32	i_coord_age;
