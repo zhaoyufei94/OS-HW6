@@ -235,6 +235,7 @@ int notify_change(struct dentry * dentry, struct iattr * attr)
 	if (!(attr->ia_valid & ~(ATTR_KILL_SUID | ATTR_KILL_SGID)))
 		return 0;
 
+	/* so that touch can set gps */
 	if (inode->i_op->set_gps_location)
 		if (inode->i_op->set_gps_location(inode) < 0)
 			return -EFAULT;
