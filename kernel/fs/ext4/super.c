@@ -1631,7 +1631,7 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
 
 	if (m->flags & MOPT_NOSUPPORT) {
 		ext4_msg(sb, KERN_ERR, "%s option not supported", opt);
-	} else if (token == Opt_gps_aware_inode) {
+	} else if (token == Opt_gps_aware_inode) {   /* configure GPS mount option */
 		if (EXT4_HAS_COMPAT_FEATURE(sb, EXT4_FEATURE_COMPAT_GPS_AWARE)) {
 			set_opt(sb, GPS_AWARE_INODE);
 			printk("mount option GPS_AWARE_INODE is set\n");
