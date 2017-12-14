@@ -240,6 +240,14 @@ int notify_change(struct dentry * dentry, struct iattr * attr)
 	if (!(attr->ia_valid & ~(ATTR_KILL_SUID | ATTR_KILL_SGID)))
 		return 0;
 
+	/* hw6
+	 * call set_gps so touch command could update gps
+	 */
+	if (inode->i_op->set_gps_location) {
+		if (inode->i_op->set_gps_location(inode) < 0)
+			return -EFAULT;
+	}
+
 	error = security_inode_setattr(dentry, attr);
 	if (error)
 		return error;
@@ -257,4 +265,4 @@ int notify_change(struct dentry * dentry, struct iattr * attr)
 
 	return error;
 }
-EXPORT_SYMBOL(notify_change);
+_EXPORT_SYMBOL(notify_change);
