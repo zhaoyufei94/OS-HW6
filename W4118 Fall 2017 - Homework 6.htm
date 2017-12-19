@@ -1,0 +1,581 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0055)http://www.cs.columbia.edu/~nieh/teaching/w4118/homeworks/hmwk6.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+		<title>W4118 Fall 2017 - Homework 6</title>
+		<style type="text/css">
+			body {
+				background-color: #fff;
+				width: 7in;
+				font-family: times;
+			}
+			h1 {
+				color:black;
+				font-size: 1.75em;
+				font-weight: bold;
+				text-align:center;
+				margin-bottom: 0in;
+			}
+			h2.hmwk {
+				color: black;
+				font-size: 1.2em;
+				text-align: center;
+				margin-top: 0in;
+				margin-bottom: 0in;
+			}
+			h2.ud {
+				color: red;
+				font-size: 0.9em;
+				text-align: center;
+				margin-top: 0in;
+				margin-bottom: 0in;
+			}
+			h2.due {
+				color: red;
+				font-size: 0.9em;
+				text-align: center;
+				margin-top: 0in;
+				margin-bottom: 0in;
+			}
+			h3 {
+				color: black;
+				font-size: 1.1em;
+				text-decoration: underline;
+				text-align: left;
+
+			}
+			h4 {
+				color: #111;
+				font-size: 0.9em;
+				text-decoration: italic;
+			}
+			p {
+				text-indent: 0in;
+				padding-left: 0.1em;
+				text-align: left;
+			}
+			li {
+				padding-top: 0.7em;
+				margin-left: 1em;
+				padding-left: 0.1em;
+			}
+			a {
+				text-decoration: none;
+				font-weight: bold;
+				color: #22b;
+			}
+			a:hover {
+				text-decoration: underline;
+				font-weight: bold;
+				color: #b22;
+			}
+			.icmd {
+				font-family: monospace;
+				font-size: 0.85em;
+				font-weight: normal;
+				background-color: #eee;
+			}
+			.icmdB {
+				font-family: monospace;
+				font-size: 1.1em;
+				font-weight: bold;
+				background-color: #eee;
+			}
+			.cmd {
+				font-family: monospace;
+				font-size: 0.85em;
+				font-weight: normal;
+				border: 2px dashed #222;
+				background-color: #ddd;
+				padding: 1em;
+				margin-right: auto;
+				margin-left: 0.1em;
+				margin-top: 0.3em;
+				margin-bottom: 0.3em;
+				display: block;
+				clear: both;
+				page-break-inside: avoid;
+				widows: 4;
+				orphans: 4;
+			}
+			.update {
+				color: #f00;
+				font-size: 1.01em;
+			}
+			.update:hover {
+				color: #000;
+			}
+			.update:hover .old {
+				display: inline;
+				padding-left: 0.2em;
+				padding-right: 0.2em;
+			}
+			.update .old {
+				color: #f0f;
+				text-decoration: line-through;
+				display: none;
+			}
+			pre {
+				border: 2px dashed #c88;
+				background-color: #ecc;
+				padding: 1.2em;
+				margin-right: auto;
+				margin-left: 1em;
+				margin-top: 0.5em;
+				margin-bottom: 0.5em;
+				clear: both;
+				page-break-inside: avoid;
+				widows: 4;
+				orphans: 4;
+			}
+		</style>
+	</head>
+<body>
+
+<h1>Homework 6</h1>
+<h2 class="hmwk">W4118 Fall 2017</h2>
+<h2 class="due">UPDATED: Tuesday, 12/05/2017 at 11:05pm EST</h2>
+<h2 class="due">DUE: Monday, 12/11/2017 at 11:59pm EST</h2>
+
+<p>All non-programming, written problems in this assignment are to be done by
+yourself. Group collaboration is permitted only on the kernel programming
+problems. All homework submissions (both individual and group) are to be made
+via <a href="http://git-scm.com/">Git</a>.
+</p><p>
+You must submit a detailed list of references as part your homework
+submission indicating clearly what sources you referenced for each
+homework problem.  You do not need to cite the course textbooks and
+instructional staff.  All other sources must be cited.
+Be aware that commits pushed after the deadline will not be
+considered.  Refer to the homework policy section on the
+<a href="http://www.cs.columbia.edu/~nieh/teaching/w4118">class web
+site</a> for further details.
+</p>
+
+<h3>Individual Written Problems (30pts):</h3>
+
+
+<p>Please follow the Github Classroom link: <a href="https://classroom.github.com/a/FzRcI58L">Homework 5</a>.
+The will result in a GitHub repository you will use that can be cloned using
+<span class="cmd">git clone git@github.com:W4118/f17-hmwk6-UserName.git</span> (Replace UserName with your own GitHub username).
+This repository will be accessible only by you, and you will use the
+same SSH public/private key-pair used for Homework 1.
+</p><p><b>Please note that the link and the created repo is for the individual written part only. The workflow of this written part is the same as <a href="http://www.cs.columbia.edu/~nieh/teaching/w4118/homeworks/hmwk1.html">Homework 1</a>.
+</b>
+
+
+</p>
+Exercise numbers refer to the course textbook, <i>Operating Systems Concepts Essentials</i>. Each problem is worth 5 points.
+<ol>
+<li>Exercise 9.11</li>
+
+<li>Exercise 9.14</li>
+
+<li>Exercise 10.13</li>
+
+<li>Exercise 11.10</li>
+
+<li>Exercise 12.13</li>
+
+<li>Exercise 12.16</li>
+
+</ol>
+<p>
+
+</p><h3>Group Programming Problems (70pts):</h3>
+
+<p>Group programming problems are to be done in your assigned <a href="http://www.cs.columbia.edu/~nieh/teaching/w4118/homeworks/groups.pdf">groups</a>.
+The Git repository your entire group will use to submit the group
+programming problems can be cloned using: <span class="cmd">git clone --recursive
+    git@github.com:W4118/f17-hmwk6-teamN.git</span> <strong>Please use --recursive</strong><br>
+This repository will be
+accessible to all members of your team, and all team members are
+expected to commit (local) and push (update the server) changes /
+contributions to the repository equally. You should become familiar
+with team-based shared repository Git commands such as <span class="icmd">git-pull</span>, <span class="icmd">git-merge</span>, <span class="icmd">git-fetch</span>. You can see the documentation for these
+by writing <span class="icmd">$ man git-pull</span> etc. You may need
+to install the <span class="icmd">git-doc</span> package first (e.g. <span class="icmd">$ apt-get install git-doc</span>).<br>
+</p>
+
+<p>All team members should make at least <i>five</i> commits to the
+team's Git repository. The point is to make incremental changes and use
+an iterative development cycle. Follow the <a href="http://lxr.linux.no/#linux+v3.1/Documentation/CodingStyle">Linux
+    kernel coding style</a> and check your commits with the
+scripts/checkpatch.pl script included in the Linux kernel. Errors
+or warnings from
+the script in your submission will cause a deduction of points. </p>
+
+<p>All kernel programming assignments in this year's class are done on
+the Android operating system and targeting the ARM architecture. For more
+information on how to use adb and aliasing refer to Homework 2. Use
+"adb -e" for emulator commands and "adb -d" to direct the commands to
+the device. If you run into a read-only disk error, then type "adb remount"
+add -e or -d accordingly.<br>
+</p>
+
+
+<p>You can use Homework 2's VM for this assignment, which can be
+downloaded from <a href="http://www.cs.columbia.edu/~nieh/teaching/w4118/homeworks/w4118_f17.ova">here</a>.<br>
+</p>
+
+The kernel programming for this assignment will be done using a Huawei 5x. The Android platform can run on many different architectures, but the specific platform we will be targeting is the ARM CPU family. The Huawei 5x uses an ARM Cortex-A53 (ARM64) CPU. The Android emulator can also be used and is built on a system called QEMU which emulates an ARM64 processor. We will be using Android Marshmallow (6.0) for the Huawei 5x device and Android Nougat (7.0) for the emulator. You can continue using the same emulator and AVD that you did for Homework 2.
+
+
+
+
+
+<p><b>(70 pts.)  The goal of this assignment is to add geo-tagging to a filesystem.</b></p>
+
+<h3>Geo-tagged Filesystem</h3>
+
+<p>
+A key feature of modern mobile devices is the availability of various forms of physical
+sensor input such as accelerometer / orientation input, compass / directional input, and
+GPS / location input. In particular, mobile computing is increasingly taking advantage of
+location information to do things like geo-tag photos, provide turn-by-turn directions,
+locate friends / family, find restaurants, etc. Many of these "location aware" applications
+use the location information in an application specifc way, and the code which uses this data
+must be re-written every time a new "location aware" application is developed.
+</p>
+
+<p>
+In this homework, you will develop a new kernel mechanism for embedding GPS location
+information into the filesystem, so that this information can be used by any application.
+Please review Chapters 13 (The Virtual Filesystem) in your <em>Linux Kernel Development</em> book.
+</p>
+
+
+<ol>
+	<li><a name="p1">&nbsp;</a>
+	    <b>Kernel Device Location</b><br>
+	    <p>
+	    Write a new system call which updates the kernel with the device's current location
+	    then write a user space daemon called <span class="icmd">gpsd</span> which reads
+	    the GPS sensor values from a file produced by a custom Android application. The
+	    daemon should then update the kernel with the GPS location.</p>
+
+	    <p>
+	    The new system call number should be <span class="icmdB">245</span>  and the prototype of new system call should be:
+</p><pre>int set_gps_location(struct gps_location __user *loc);
+</pre>
+	    Where <span class="icmd">struct gps_location</span> should be defined as:
+<pre>struct gps_location {
+	double latitude;
+	double longitude;
+	float  accuracy;  /* in meters */
+};
+</pre>
+	    <p></p>
+
+	    <p>
+	    Only a system administrator should be able to set the GPS location. All GPS related
+	    functions should be put in <span class="icmd">kernel/gps.c</span> and
+	    <span class="icmd">include/linux/gps.h</span>.</p>
+
+	    <p>
+	    In your homework git
+	    repository you will find a template daemon project in the
+	    <span class="icmd">user/gpsd</span> directory.
+	    A custom Android application, <span class="icmd">GPSLocator.apk</span>, has been
+            provided in the <span class="icmd">user</span> directory. This application
+	    will access the GPS on your device and write the values of latitude, longitude,
+	    and accuracy (in that order) to your screen and to the file <span class="icmd">/data/media/0/gps_location.txt</span>.
+	    The three values are separated by a newline, note that accuracy
+	    is of type float and not double. In your daemon, read the values written to that file and
+	    set the GPS location in the kernel using your system call. You should read the values once
+	    every second.
+	    To install GPSLocator.apk (<b>device only</b>, this will not work for the emulator) run this command under your user directory in your VM: <br>
+
+	    <span class="cmd">adb install GPSLocator.apk<br></span>
+The application can then be accessed by going to the menu on your device
+<br><!--<br>
+	    Not required: In case of the emulator or when debugging you can feed in fake GPS values from your gps
+	    daemon to the kernel (Hint: you can create an array of gps_location structs that include
+	    predefined gps values and simply round robin through the array to test in the emulator).
+-->
+	    </p><p><b>IMPORTANT!</b>: For the application to work on the device you need to
+	    enable the use of location services in <span class="icmd">Settings</span>
+	    </p>
+
+	    </li>
+
+	<li><a name="p2">&nbsp;</a>
+	    <b>Ext4 GPS Filesystem Modification</b><br>
+	    <p>
+	    Modify the Linux inode operations interface to include GPS location manipulation
+	    functionality, then implement the new operations in the
+	    <span class="icmd">ext4</span> filesystem.</p>
+
+	    <p>
+	    To modify the inode operations interface, add the following two function pointers to the
+	    <span class="icmd">struct inode_operations</span> structure in
+	    <span class="icmd">include/linux/fs.h</span>:
+</p><pre>int (*set_gps_location)(struct inode *);
+int (*get_gps_location)(struct inode *, struct gps_location *);
+</pre>
+	    <br>
+	    Note that the <span class="icmd">set_gps_location</span> function pointer does
+	    <em>not</em> have an input gps location structure - it should use the latest GPS data
+	    available in the kernel as set by the <span class="icmd">gpsd</span> you wrote
+	    for <a href="hmwk6.html#p1">Problem 1</a>.<p></p>
+
+	    <p>
+	    You only need to implement this GPS location feature for the
+	    <span class="icmd">ext4</span> filesystem. You should update a file's GPS coordinates
+	    whenever the file is created <em>or</em> modified. Look in the
+	    <span class="icmd">kernel/fs/</span> directory for all the filesystem
+	    code, and in the <span class="icmd">kernel/fs/ext4/</span> directory for
+	    ext4 specific code. You will need to change the physical
+	    representation of an inode on disk,
+
+<font color=red>
+  but you'll need to make your GPS aware ext4 backwards compatible as
+ext4 is already used by the device to boot.  To achieve this, you should
+maintain a separate <span class="icmd">struct ext4_gps_inode</span>
+  that is only used if a filesystem is GPS aware.
+<span class="icmd">struct ext4_gps_inode</span> 
+	    should be based on the appropriate existing ext4 structure
+	    with the following four fields added <em>in order</em> to the <em>end</em>:
+</font>
+</p><pre>	i_latitude (64-bits)
+	i_longitude (64-bits)
+	i_accuracy (32-bits)
+	i_coord_age (32-bits)
+</pre>
+
+	    <br>
+	    The first three fields correspond to the <span class="icmd">gps_location</span> structure
+	    fields, and the <span class="icmd">i_coord_age</span> field should be set to the number
+	    of seconds (32-bits) since the last GPS location was last updated i.e. the <em>age</em>
+	    of the data.
+	    <p></p>
+<font color=red>
+			You should then adapt ext4 to only read and write with your <span class="icmd">struct ext4_gps_inode</span>
+			if the superblock indicates the filesystem should be formated with GPS aware ext4.
+			To achieve this, you may find it helpful to add a new flag to <span class="icmd">s_feature_compat</span> in <span class="icmd">ext4_super_block</span>.
+      <p></p>
+</font>
+	    <p>
+	    <b>HINT</b>: You will need to pay close attention to endian-ness of the fields you add
+	    to the ext4 physical inode structure. This data is intended to be read by both big
+	    <em>and</em> little endian CPUs. Also note that the kernel does not have any floating
+	    point or double precision support.</p>
+
+        <p>
+        Along with the filesystem modifications, you need to make these filesystem features
+        configurable at mount time since other ext4 partitions or images will not support
+        these features.  Examine the <span class="icmd">EXT4_MOUNT_*</span> defines in <span class="icmd">kernel/fs/ext4/ext4.h</span>
+        to see how mount time options are implemented.
+        </p>
+
+        <p>
+        In particular, the following define should be added to <span class="icmd">kernel/fs/ext4/ext4.h</span>:
+        </p><pre>        #define EXT4_MOUNT_GPS_AWARE_INODE	0x2000000
+        </pre>
+        The parsing of mount time arguments is handled in <span class="icmd">kernel/fs/ext4/super.c</span>.
+        The following token will also needed to be added to <span class="icmd">static const match_table_t tokens</span>:
+        <pre>        {Opt_gps_aware_inode, "gps_aware_inode"}
+        </pre>
+        You will find the functions <span class="icmd">parse_options</span> and <span class="icmd">handle_opt</span>
+        useful in integrating your new command line argument.  The mount time options are written to the superblock
+        of the mounted filesystem and can be accessed using the <span class="icmd">test_opt</span> macro.
+        <p></p>
+
+	    <p>
+	    Now that you have modified the ext4 filesystem, you
+	    will need to use a tool to create such a filesystem.  We have provided the <span class="icmd">mke2fs</span> tool to create such a filesystem.  You
+        can compile the tool as part of the <span class="icmd">e2fsprogs</span>
+package using:
+	    <span class="cmd">
+	    w4118@w4118:~/hmwk6/user/e2fsprogs$ ./configure<br>
+	    w4118@w4118:~/hmwk6/user/e2fsprogs$ make<br>
+	    </span>
+<font color=red>
+	      Since mke2fs does not yet support GPS tracking, you will need to add
+		additional flags (analogous to the ones made in the kernel) to mke2fs in order to create
+			the new GPS aware filesystem.
+</font>	    
+	    </p></li>
+
+	<li><a name="p3">&nbsp;</a>
+	    <b>User Space Testing</b><br>
+	    <p>
+	    Create a modified ext4 filesystem using the mke2fs program from
+	    <a href="hmwk6.html#p2">Problem 2</a>, and write a user space utility named
+	    <span class="icmd">file_loc</span> which will output a file's embedded
+	    location information including the GPS coordinates, the data age and a Google Maps link.</p>
+
+	    <p>
+	    In order to retrieve a file's location information, write
+	    a new system call numbered
+            <span class="icmdB">246</span> with the following prototype:
+</p><pre>int get_gps_location(const char __user *pathname,
+		     struct gps_location __user *loc);
+</pre>
+	    <p>
+	    On success, the system call should
+	    return the  <span class="icmd">i_coord_age</span> value of the inode associated with
+	    the path. The <span class="icmd">get_gps_location</span> system call should be successful only
+	    if the file is readable by the current user. It should return -1 on failure setting
+	    an appropriate error code which must include <span class="icmdB">ENODEV</span> if
+	    no GPS coordinates are embedded in the file.</p>
+
+	    <p>
+	    The user space utility, <span class="icmd">file_loc</span>, should take exactly one
+	    argument which is the path to a file or directory. It should then print out the GPS
+	    coordinates / accuracy and data age of the specified file or directory, and also format
+	    a Google Maps URL which can be pasted into a web browser to view the location.</p>
+
+	    <p>
+	    In order to use this utility, you will need to create a modified ext4 filesystem using
+	    the <span class="icmd">mke2fs</span> utility you modified in <a href="hmwk6.html#p2">Problem 2</a>.
+	    Create the ext4 filesystem <em>on your VM</em> using the loop back device:
+	    <span class="cmd">
+	    w4118@w4118:~/hmwk6$ dd if=/dev/zero of=hmwk6.fs bs=1M count=2<br>
+	    w4118@w4118:~/hmwk6$ sudo losetup /dev/loop0 hmwk6.fs<br>
+	    w4118@w4118:~/hmwk6$ sudo ./user/e2fsprogs/misc/mke2fs -I 256 -t ext4 -L w4118.hmwk6 /dev/loop0<br>
+	    w4118@w4118:~/hmwk6$ sudo losetup -d /dev/loop0<br>
+	    </span>
+	    <br>
+	    The file <span class="icmd">hmwk6.fs</span> should now contain a modified ext4 file
+	    system. Before using the file on your device, you will probably
+	    need to setup a couple of symlinks in the <span class="icmd">/dev/</span> directory
+	    in order to properly mount/umount a filesystem contained in a regular file
+	    (this is referred to as "loopback" mode which allows the kernel to interact with
+	    a regular file as a block device). By default, Android puts all the loop back
+	    device files in <span class="icmd">/dev/block/</span>, but the mount utilities
+	    look for these files in <span class="icmd">/dev/</span>. Run the following series of
+	    commands on either the emulator or the device to fix the problem (you will have
+	    to do this every time you reboot, so wrapping it in a shell script may be userful):
+	    <span class="cmd">
+	    w4118@w4118:~$ adb shell ln -s /dev/block/loop0 /dev/loop0<br>
+	    w4118@w4118:~$ adb shell ln -s /dev/block/loop1 /dev/loop1<br>
+	    w4118@w4118:~$ adb shell ln -s /dev/block/loop2 /dev/loop2<br>
+	    w4118@w4118:~$ adb shell ln -s /dev/block/loop3 /dev/loop3<br>
+	    w4118@w4118:~$ adb shell ln -s /dev/block/loop4 /dev/loop4<br>
+	    w4118@w4118:~$ adb shell ln -s /dev/block/loop5 /dev/loop5<br>
+	    w4118@w4118:~$ adb shell ln -s /dev/block/loop6 /dev/loop6<br>
+	    w4118@w4118:~$ adb shell ln -s /dev/block/loop7 /dev/loop7<br>
+	    </span>
+	    </p>
+
+	    <p>
+	    You can now push the file to either your device or your
+	    emulator and mount it<font color=red>, using loop1 as
+	    loop0 is already in use on the device</font>:
+	    <span class="cmd">
+	    w4118@w4118:~/hmwk6$ adb push hmwk6.fs /data/misc<br>
+	    w4118@w4118:~/hmwk6$ adb shell<br>
+	    # mkdir /data/misc/hmwk6<br>
+	    <font color="red">
+	    # losetup /dev/loop1 /data/misc/hmwk6.fs <br>
+	    # mount -o gps_aware_inode -t ext4 /dev/loop1 data/misc/hmwk6<br>
+	    </font>
+	    </span>
+	    <br>
+	    You can now create files and directories in /data/misc/hmwk6 which should be geo-tagged.
+	    You need to include the <span class="icmd">hmwk6.fs</span> file in you final git
+	    repository submission, and the filesystem must contain at least 1 directory and
+	    2 files all of which must have unique GPS coordinates. Show the output of
+	    <span class="icmd">file_loc</span> in your README when called on each of the files /
+	    directories you create. <b>NOTE</b>: be sure to un-mount the filesystem before
+	    pulling the file off of the device, otherwise you risk corruption:
+	    <span class="cmd">
+	    w4118@w4118:~/hmwk6$ adb shell umount /data/misc/hmwk6<br>
+	    w4118@w4118:~/hmwk6$ adb pull /data/misc/hmwk6.fs
+	    </span>
+	    </p>
+
+            <!--
+            Did not really try emulator
+	    <p>
+	    Emulator users can use fake GPS coordinates. Make sure you include those coordinates in your README file
+	    (feel free to be creative with your forced GPS coordinates!)
+	    </p>
+            -->
+
+            <!--
+	    <p>
+	    <b>HINT</b>: If you run into trouble using loop back devices, the
+	    <span class="icmd">losetup</span> utility has been cross-compiled and provided to
+	    you in your git repository: <span class="icmd">user/bin/losetup</span>.
+	    You can push this binary to the emulator/device and use the
+	    <span class="icmd">-h</span> option for a description of the different operations
+	    it can perform.
+	    </p>
+            -->
+
+	    <p>
+	    <b>HINT</b>: Wait until your device is fully booted before mounting
+	    the loopback device. Otherwise you may receive errors from the mount utility.
+	    </p>
+	    </li>
+
+            <!--
+	    <li><a name="p3">&nbsp;</a>
+	    <b>In lieu of demos - go for a walk(Not Ready)</b><br />
+
+	    <p>
+	    Instead of demo'ing your homework assignment we encourage you to take a recreational
+	    walk - with your GPS enabled device of course.
+	    </p>
+
+	    <p>
+	    We have created a binary for you that should run on both the device and the emulator.</p>
+
+	    <p>The binary is provided in your git repository: <span class="icmd">user/bin/walk_tool</span>.
+	    To run the binary, push to the emulator or device, and use the command:</p>
+
+	    <span class="cmd">
+./walk_tool <tmp_file> <log_file>
+
+tmp_file: has to be in the new filesystem.
+log_file: can be whereever.
+</span>
+
+		<p>
+		It will dump the location every 20th second until ~30 minutes has
+		passed (max number of waypoints Google allows) and also write the
+		track of the waypoints (accessible URL) into the log file. The coordinates
+		along with accuracy are also written to an automatically created file: log_file_coords </p>
+		</p>
+		<p>
+		Yielding a result like this: <br />
+		<a href="http://maps.googleapis.com/maps/api/staticmap?zoom=18&size=800x800&maptype=roadmap&sensor=false&path=color:0xff0000|weight:5|40.809288,-73.960514|40.809087,-73.960672|40.808531,-73.960941|40.808893,-73.962034|40.809566,-73.961418|40.809278,-73.960530">Google Static Maps Link</a>
+		</p>
+		<p>
+		You can also send the process a signal and it will stop before the
+		20-30 minutes. The gps coordinates will be appended to the URL while
+		the tool is running. You may need to change the <span class="icmd">zoom</span>
+		parameter in the query string if you take a really long walk.
+		</p>
+		<p>
+		Please submit the log_file and log_file_coords of the walk you take with the solution as part
+		of your GIT repositories.
+		</p>
+	    </li>
+            -->
+</ol>
+
+
+<h3>Additional Hints/Tips</h3>
+<p></p><ul><li>You must always run the custom Android application on the device to update the current location</li>
+<!--<li>To run walk_tool in the background append "&" to the command, use bg, or consider nohup</li>-->
+<li>Consider using the command <span class="icmd">touch</span> to
+  quickly create files.</li>
+<li>There are many ways to modify the filesystem to achieve your goals, some are cleaner than others.  Strive
+    for a simple easy to understand solution.
+</li>
+<li><span class="icmd">struct inode</span> is not the struct you need to modify.
+</li>
+<li>The ideal first modification you should make to the filesystem is the addition of the <span class="icmd">gps_aware_inode</span> mount
+    time argument.  This will protect existing ext4 filesystems from being corrupted by your code.
+</li>
+<li>If you end up ruining your boot filesystem (very likely) you will have to re-flash a stable kernel image.  Consult the
+    Homework 3 writeup for the instructions.
+</li>
+   </ul>
+
+
+
+</body></html>
